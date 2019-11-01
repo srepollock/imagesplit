@@ -6,6 +6,8 @@ import subprocess
 import time
 import os
 
+DEBUG = False
+
 def image_size(original_image):
     '''
     Gets the image width and height.
@@ -39,6 +41,10 @@ def run_magik(original_image, cell_width, cell_height):
     width_range = int(round(image_width / cell_width))
     height_range = int(round(image_height / cell_height))
     progress = 0
+    global DEBUG # "Needed to modify global copy of globvar", from https://stackoverflow.com/a/423596
+    if (DEBUG):
+        print ('Debugging Information:\nWould have made: {} images at {}x{} px resolution.'.format(width_range * height_range, cell_width, cell_height))
+        return
     print ('Begin Image Splitting:\n')
     with progressbar.ProgressBar(max_value=(width_range * height_range)) as bar:
         for i in range(0, width_range):
@@ -63,15 +69,15 @@ def get_args():
     parser.add_argument('image', type=str, action='store', help='Image to convert and split.')
     parser.add_argument('--width', type=int, dest='width', action='store', default=1024, help='Width of the cell to split the image by.')
     parser.add_argument('--height', type=int, dest='height', action='store', default=1024, help='Height of the cell to split the image by.')
-    # parser.add_argument('--debug', dest='debug', action='store_true', help='Runs debug statements and checks without processing.') # NOTE: to be implemented later
+    parser.add_argument('--debug', dest='debug', action='store_true', help='Runs debug statements and checks without processing.') # NOTE: to be implemented later
     return parser.parse_args()
 
 def main(args):
     '''
     Main function for running.
     '''
-    if (args.debug):
-        DEBUG = args.debug
+    global DEBUG
+    DEBUG = args.debug
     run_magik(args.image, args.width, args.height)
     return
 
