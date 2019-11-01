@@ -47,9 +47,9 @@ def run_magik(original_image, cell_width, cell_height):
         return
     print ('Begin Image Splitting:\n')
     with progressbar.ProgressBar(max_value=(width_range * height_range)) as bar:
-        for i in range(0, width_range):
+        for i in range(0, width_range + 1):
             offset_width = i * cell_width
-            for j in range(0, height_range):
+            for j in range(0, height_range + 1):
                 offset_height = j * cell_height
                 new_image = original_image.split(".png")[0] + "_{offset_width}_{offset_height}.png".format(offset_width=offset_width, offset_height=offset_height)
                 args = 'convert -extract {width}x{height}+{offset_width}+{offset_height} {original_image} {new_image}'.format(original_image=original_image, new_image=new_image, width=cell_width, height=cell_height, offset_width=offset_width, offset_height=offset_height)
